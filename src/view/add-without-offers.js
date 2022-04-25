@@ -1,3 +1,5 @@
+import AbstractComponentClass from './abstract-component-class';
+
 export const addWithoutOffers = () => (`<li class="trip-events__item">
               <form class="event event--edit" action="#" method="post">
                 <header class="event__header">
@@ -110,3 +112,9 @@ export const addWithoutOffers = () => (`<li class="trip-events__item">
                 </section>
               </form>
             </li>`);
+
+export default class AddWithoutOffers extends AbstractComponentClass{
+  get template() {
+    return addWithoutOffers();
+  }
+}
