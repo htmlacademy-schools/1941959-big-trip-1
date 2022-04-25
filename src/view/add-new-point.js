@@ -1,31 +1,8 @@
-/*const compareValues = (nodeLabel, moski) => {
-  const inputToCheckID = nodeLabel.getAttribute('value') === moski.travelPointType()?nodeLabel.getAttribute('for'):'';
-  if (inputToCheckID !== '') {
-    addPointValue.querySelector(`#${inputToCheckID}`).setAttribute('checked');
-  }
-};
-*/
-// import {travelPointMocks} from '../mock/travel-point-mocks';
-const getRandomInt = (max) => Math.floor(Math.random() * max);
-const createOffer = (offerName, offerData, isOfferChecked) => (`<div class="event__offer-selector">
-                        <input class="event__offer-checkbox  visually-hidden" id="${offerData['id']}" type="checkbox" name="event-offer-meal" ${isOfferChecked?'checked':''}>
-                        <label class="event__offer-label" for="${offerData['id']}">
-                          <span class="event__offer-title">${offerName}</span>
-                          &plus;&euro;&nbsp;
-                          <span class="event__offer-price">${offerData['cost']}</span>
-                        </label>
-                      </div>`);
+import {creatElement} from '../render';
+import {getRandomInt, offerList} from '../toolUnit';
 
-const offerList = (pointData) => {
-  let listOfOffers = '';
-  for (let i =0; i<Object.keys(pointData.offers).length ; i++) {
-    const offerName = Object.keys(pointData.offers)[i];
-    listOfOffers += createOffer(offerName, pointData.offers[offerName], pointData.offersCheck[i]);
-  }
-  return listOfOffers;
-};
 
-export const addNewPoint = (pointData) => (`<li class="trip-events__item">
+const addNewPoint = (pointData) => (`<li class="trip-events__item">
               <form class="event event--edit" action="#" method="post">
                 <header class="event__header">
                   <div class="event__type-wrapper">
@@ -89,9 +66,9 @@ export const addNewPoint = (pointData) => (`<li class="trip-events__item">
 
                   <div class="event__field-group  event__field-group--destination">
                     <label class="event__label  event__type-output" for="event-destination-1">
-                      ${pointData.travelType[getRandomInt(pointData.travelType.length)]}
+                      ${pointData.travelPointType}
                     </label>
-                    <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value=${pointData.destination[getRandomInt(pointData.destination.length)]} list="destination-list-1">
+                    <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value=${pointData.destination} list="destination-list-1">
                     <datalist id="destination-list-1">
                       <option value="Amsterdam"></option>
                       <option value="Geneva"></option>
@@ -101,10 +78,10 @@ export const addNewPoint = (pointData) => (`<li class="trip-events__item">
 
                   <div class="event__field-group  event__field-group--time">
                     <label class="visually-hidden" for="event-start-time-1">From</label>
-                    <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value=${pointData.pointTime}>
+                    <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value=${'sometime'}>
                     &mdash;
                     <label class="visually-hidden" for="event-end-time-1">To</label>
-                    <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value=${pointData.pointTime}>
+                    <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value=${'sometime'}>
                   </div>
 
                   <div class="event__field-group  event__field-group--price">
@@ -112,7 +89,7 @@ export const addNewPoint = (pointData) => (`<li class="trip-events__item">
                       <span class="visually-hidden">Price</span>
                       &euro;
                     </label>
-                    <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="${pointData.cost}">
+                    <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="${pointData.price}">
                   </div>
 
                   <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
@@ -122,7 +99,14 @@ export const addNewPoint = (pointData) => (`<li class="trip-events__item">
                   <section class="event__section  event__section--offers">
                     <h3 class="event__section-title  event__section-title--offers">Offers</h3>
                     <div class="event__available-offers">
-                        ${offerList(pointData)}
+                        ${offerList(pointData, (offer) => (`<div class="event__offer-selector">
+                        <input class="event__offer-checkbox  visually-hidden" id="$${offer.id}" type="checkbox" name="event-offer-meal" ${offer.isChecked?'checked':''}>
+                        <label class="event__offer-label" for="${offer.id}">
+                          <span class="event__offer-title">${offer.fullName}</span>
+                          &plus;&euro;&nbsp;
+                          <span class="event__offer-price">${offer.cost}</span>
+                        </label>
+                      </div>`))}
                     </div>
                   </section>
 
@@ -143,3 +127,26 @@ export const addNewPoint = (pointData) => (`<li class="trip-events__item">
                 </section>
               </form>
             </li>`);
+
+export default class AddNewPoint {
+  #pointData;
+  #element = null;
+  constructor(pointData) {
+    this.#pointData = pointData;
+  }
+
+  get element() {
+    if (!this.#element) {
+      this.#element = creatElement(this.template);
+    }
+    return this.#element;
+  }
+
+  get template() {
+    return addNewPoint(this.#pointData);
+  }
+
+  removeElement() {
+    this.#element = null;
+  }
+}

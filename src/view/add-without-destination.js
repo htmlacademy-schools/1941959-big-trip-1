@@ -1,4 +1,6 @@
-export const addWithoutDestination = () => (`<li class="trip-events__item">
+import {creatElement} from '../render';
+
+const addWithoutDestination = () => (`<li class="trip-events__item">
               <form class="event event--edit" action="#" method="post">
                 <header class="event__header">
                   <div class="event__type-wrapper">
@@ -145,3 +147,21 @@ export const addWithoutDestination = () => (`<li class="trip-events__item">
                 </section>
               </form>
             </li>`);
+
+export default class AddWithoutDestination {
+  #element = null;
+  get element() {
+    if (!this.#element) {
+      this.#element = creatElement(this.template);
+    }
+    return this.#element;
+  }
+
+  get template() {
+    return addWithoutDestination();
+  }
+
+  removeElement() {
+    this.#element = null;
+  }
+}
