@@ -1,6 +1,7 @@
 import AbstractComponentClass from './abstract-component-class';
+import {offerList} from '../toolUnit';
 
-const addWithoutDestination = () => (`<li class="trip-events__item">
+const editPoint = (pointData) => (`<li class="trip-events__item">
               <form class="event event--edit" action="#" method="post">
                 <header class="event__header">
                   <div class="event__type-wrapper">
@@ -64,9 +65,9 @@ const addWithoutDestination = () => (`<li class="trip-events__item">
 
                   <div class="event__field-group  event__field-group--destination">
                     <label class="event__label  event__type-output" for="event-destination-1">
-                      Flight
+                      ${pointData.travelPointType}
                     </label>
-                    <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="" list="destination-list-1">
+                    <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${pointData.destination}" list="destination-list-1">
                     <datalist id="destination-list-1">
                       <option value="Amsterdam"></option>
                       <option value="Geneva"></option>
@@ -76,10 +77,10 @@ const addWithoutDestination = () => (`<li class="trip-events__item">
 
                   <div class="event__field-group  event__field-group--time">
                     <label class="visually-hidden" for="event-start-time-1">From</label>
-                    <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="19/03/19 00:00">
+                    <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="18/03/19 12:25">
                     &mdash;
                     <label class="visually-hidden" for="event-end-time-1">To</label>
-                    <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="19/03/19 00:00">
+                    <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="18/03/19 13:35">
                   </div>
 
                   <div class="event__field-group  event__field-group--price">
@@ -87,69 +88,64 @@ const addWithoutDestination = () => (`<li class="trip-events__item">
                       <span class="visually-hidden">Price</span>
                       &euro;
                     </label>
-                    <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="">
+                    <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="${pointData.price}">
                   </div>
 
                   <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
-                  <button class="event__reset-btn" type="reset">Cancel</button>
+                  <button class="event__reset-btn" type="reset">Delete</button>
+                  <button class="event__rollup-btn" type="button">
+                    <span class="visually-hidden">Open event</span>
+                  </button>
                 </header>
                 <section class="event__details">
                   <section class="event__section  event__section--offers">
                     <h3 class="event__section-title  event__section-title--offers">Offers</h3>
 
                     <div class="event__available-offers">
-                      <div class="event__offer-selector">
-                        <input class="event__offer-checkbox  visually-hidden" id="event-offer-luggage-1" type="checkbox" name="event-offer-luggage" checked>
-                        <label class="event__offer-label" for="event-offer-luggage-1">
-                          <span class="event__offer-title">Add luggage</span>
+                      ${offerList(pointData, (offer, index) => (`<div class="event__offer-selector">
+                        <input class="event__offer-checkbox  visually-hidden" id="${index}_${offer.id}_" type="checkbox" name="${index}_${offer.id}" ${offer.isChecked?'checked':''}>
+                        <label class="event__offer-label" for="${index}_${offer.id}">
+                          <span class="event__offer-title">${offer.fullName}</span>
                           &plus;&euro;&nbsp;
-                          <span class="event__offer-price">30</span>
+                          <span class="event__offer-price">${offer.cost}</span>
                         </label>
-                      </div>
-
-                      <div class="event__offer-selector">
-                        <input class="event__offer-checkbox  visually-hidden" id="event-offer-comfort-1" type="checkbox" name="event-offer-comfort" checked>
-                        <label class="event__offer-label" for="event-offer-comfort-1">
-                          <span class="event__offer-title">Switch to comfort class</span>
-                          &plus;&euro;&nbsp;
-                          <span class="event__offer-price">100</span>
-                        </label>
-                      </div>
-
-                      <div class="event__offer-selector">
-                        <input class="event__offer-checkbox  visually-hidden" id="event-offer-meal-1" type="checkbox" name="event-offer-meal">
-                        <label class="event__offer-label" for="event-offer-meal-1">
-                          <span class="event__offer-title">Add meal</span>
-                          &plus;&euro;&nbsp;
-                          <span class="event__offer-price">15</span>
-                        </label>
-                      </div>
-
-                      <div class="event__offer-selector">
-                        <input class="event__offer-checkbox  visually-hidden" id="event-offer-seats-1" type="checkbox" name="event-offer-seats">
-                        <label class="event__offer-label" for="event-offer-seats-1">
-                          <span class="event__offer-title">Choose seats</span>
-                          &plus;&euro;&nbsp;
-                          <span class="event__offer-price">5</span>
-                        </label>
-                      </div>
-
-                      <div class="event__offer-selector">
-                        <input class="event__offer-checkbox  visually-hidden" id="event-offer-train-1" type="checkbox" name="event-offer-train">
-                        <label class="event__offer-label" for="event-offer-train-1">
-                          <span class="event__offer-title">Travel by train</span>
-                          &plus;&euro;&nbsp;
-                          <span class="event__offer-price">40</span>
-                        </label>
-                      </div>
+                      </div>`))}
                     </div>
+                  </section>
+
+                  <section class="event__section  event__section--destination">
+                    <h3 class="event__section-title  event__section-title--destination">Destination</h3>
+                    <p class="event__destination-description">${pointData.description}</p>
                   </section>
                 </section>
               </form>
-            </li>`);
+            </li>`
+);
 
-export default class AddWithoutDestination extends AbstractComponentClass{
+export default class EditPoint extends AbstractComponentClass{
+  #pointData = null;
+  constructor(pointData) {
+    super();
+    this.#pointData = pointData;
+  }
+
+  setClickPointHandler = (callback) => {
+    this._callback.downClick = callback;
+    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#clickPointHandler);
+    this.element.querySelector('form').addEventListener('submit', this.#submitFormHandler);
+  }
+
+  #clickPointHandler = (evt) => {
+    evt.preventDefault();
+    this._callback.downClick();
+  }
+
+  #submitFormHandler = (evt) => {
+    evt.preventDefault();
+    this._callback.downClick();
+  }
+
   get template() {
-    return addWithoutDestination();
+    return editPoint(this.#pointData);
   }
 }
